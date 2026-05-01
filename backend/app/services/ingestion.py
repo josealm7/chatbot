@@ -9,11 +9,7 @@ from pathlib import Path
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import (
-    PyPDFLoader,
-    TextLoader,
-    UnstructuredMarkdownLoader,
-)
+from langchain_community.document_loaders import PyPDFLoader
 
 from app.services.vector_store import get_vector_store, clear_store_cache
 
@@ -21,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".md"}
 
-# Chunk config: balance entre contexto y precisión
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 120
 
@@ -48,14 +43,23 @@ def _load_document(file_path: Path) -> list[Document]:
     return docs
 
 
+def _split_documents(docs: list[Document]) -> list[Document]:
+    """Divide documentos en chunks con overlap."""
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP,
+        separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""],
+        length_function=len,
+    )
+    chunks = splitter.split_documents(docs)
+    logger.info(f"Split: {len(docs)} docs → {len(chunks)} chunks")
+    return chunks
+
+
 async def ingest_files(
     file_paths: list[Path],
     company_id: str = "default",
 ) -> tuple[int, list[str]]:
-    """
-    Carga, trocea e indexa una lista de archivos.
-    Retorna (chunks_totales, archivos_procesados).
-    """
     all_chunks: list[Document] = []
     processed: list[str] = []
     errors: list[str] = []
@@ -89,7 +93,6 @@ async def ingest_text(
     filename: str,
     company_id: str = "default",
 ) -> int:
-    """Indexa texto plano directamente (útil para FAQ, manuales rápidos)."""
     doc = Document(
         page_content=text,
         metadata={"source_file": filename, "file_type": "text/plain"},
@@ -100,7 +103,6 @@ async def ingest_text(
 
 
 async def delete_all_documents(company_id: str = "default") -> None:
-    """Elimina todos los documentos de una empresa."""
     store = get_vector_store(company_id)
     store.delete_collection()
     clear_store_cache(company_id)
