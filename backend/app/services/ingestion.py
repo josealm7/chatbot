@@ -35,7 +35,7 @@ def _load_document(file_path: Path) -> list[Document]:
     elif ext == ".txt":
         loader = TextLoader(str(file_path), encoding="utf-8")
     elif ext == ".md":
-        loader = UnstructuredMarkdownLoader(str(file_path))
+     loader = TextLoader(str(file_path), encoding="utf-8")
     else:
         raise ValueError(f"Tipo de archivo no soportado: {ext}")
 
