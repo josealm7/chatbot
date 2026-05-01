@@ -1,0 +1,79 @@
+services:
+
+  # ── Backend (FastAPI + LangChain + Claude) ─────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartchat-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      - CHROMA_PERSIST_DIR=/app/data/chroma_db
+      - VECTOR_STORE=${VECTOR_STORE:-chroma}
+    volumes:
+      # Persist ChromaDB index and uploaded documents between restarts
+      - chroma_data:/app/data/chroma_db
+      - uploads_data:/app/data/uploads
+      - company_configs:/app/data
+    ports:
+      - "8000:8000"       # Exposed for local dev; remove in production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s   # Give time for model download on first run
+    networks:
+      - smartchat-net
+
+  # ── Frontend (HTML served by nginx + reverse proxy to backend) ─────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smartchat-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - smartchat-net
+
+  # ── Seed (one-shot: loads sample documents on first boot) ──────────────────
+  seed:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartchat-seed
+    restart: "no"          # Runs once and exits
+    env_file:
+      - ./backend/.env
+    environment:
+      - CHROMA_PERSIST_DIR=/app/data/chroma_db
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - uploads_data:/app/data/uploads
+    command: python scripts/seed.py
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - smartchat-net
+
+# ── Volumes ────────────────────────────────────────────────────────────────────
+volumes:
+  chroma_data:
+    driver: local
+  uploads_data:
+    driver: local
+  company_configs:
+    driver: local
+
+# ── Network ────────────────────────────────────────────────────────────────────
+networks:
+  smartchat-net:
+    driver: bridge
