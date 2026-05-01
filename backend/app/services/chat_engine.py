@@ -1,13 +1,13 @@
 """
 RAG Chat Engine
-El corazón del sistema: retrieval + generation con LangChain + Grok.
+El corazón del sistema: retrieval + generation con LangChain + Groq.
 
 Flujo por mensaje:
 1. Detectar si el usuario pide hablar con humano → escalation
 2. Recuperar docs relevantes del vector store
 3. Evaluar confianza (score de similitud)
 4. Construir prompt con: role, historial, contexto docs, pregunta
-5. Llamar a Claude (claude-haiku-4-5-20251001)
+5. Llamar a Groq (llama-3.1-8b-instant)
 6. Devolver respuesta + fuentes + flags
 """
 from __future__ import annotations
