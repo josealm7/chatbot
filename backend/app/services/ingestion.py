@@ -32,32 +32,20 @@ def _load_document(file_path: Path) -> list[Document]:
 
     if ext == ".pdf":
         loader = PyPDFLoader(str(file_path))
-    elif ext == ".txt":
-        loader = TextLoader(str(file_path), encoding="utf-8")
-    elif ext == ".md":
-     loader = TextLoader(str(file_path), encoding="utf-8")
+        docs = loader.load()
+    elif ext in (".txt", ".md"):
+        content = file_path.read_text(encoding="utf-8")
+        docs = [Document(
+            page_content=content,
+            metadata={"source_file": file_path.name, "file_type": ext}
+        )]
     else:
         raise ValueError(f"Tipo de archivo no soportado: {ext}")
 
-    docs = loader.load()
-    # Añadir metadata útil
     for doc in docs:
         doc.metadata["source_file"] = file_path.name
         doc.metadata["file_type"] = ext
     return docs
-
-
-def _split_documents(docs: list[Document]) -> list[Document]:
-    """Divide documentos en chunks con overlap."""
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""],
-        length_function=len,
-    )
-    chunks = splitter.split_documents(docs)
-    logger.info(f"Split: {len(docs)} docs → {len(chunks)} chunks")
-    return chunks
 
 
 async def ingest_files(
