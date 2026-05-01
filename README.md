@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)
 ![LangChain](https://img.shields.io/badge/LangChain-0.3-1C3C3C)
-![Claude](https://img.shields.io/badge/Claude-Anthropic-7c6af7)
+![Groq](https://img.shields.io/badge/Groq-LLaMA3.1-f55036)
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker)
 ![Tests](https://img.shields.io/badge/tests-32%20passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -35,7 +35,7 @@ Usuario → Frontend (HTML/JS)
          FastAPI Backend
               ↓
     ┌─────────────────────┐
-    │    Chat Engine      │  ← LangChain + Claude (Anthropic)
+    │    Chat Engine      │  ← LangChain + Grok
     │  1. Detectar escal. │
     │  2. Retrieve docs   │  ← ChromaDB / Pinecone
     │  3. Score confianza │
@@ -68,7 +68,7 @@ pip install -r requirements.txt
 
 # 4. Configurar entorno
 cp .env.example .env
-# Edita .env y añade tu ANTHROPIC_API_KEY
+# Edita .env y añade tu GROK_API_KEY
 
 # 5. Arrancar
 uvicorn main:app --reload --port 8000
@@ -87,7 +87,7 @@ cd smartchat
 
 # 2. Configurar API key
 cp backend/.env.example backend/.env
-# Edita backend/.env con tu ANTHROPIC_API_KEY
+# Edita backend/.env con tu GROK_API_KEY
 
 # 3. Levantar todo
 docker compose up --build
@@ -109,7 +109,7 @@ Copia `backend/.env.example` a `backend/.env` y configura:
 
 ```env
 # Requerido
-ANTHROPIC_API_KEY=sk-ant-...
+GROK_API_KEY=sk-ant-...
 
 # Vector store: "chroma" (local, sin cuenta) | "pinecone" (cloud)
 VECTOR_STORE=chroma
@@ -193,7 +193,7 @@ tests/test_all.py::TestAPIEndpoints::test_health                 PASSED
 **Backend**
 - [FastAPI](https://fastapi.tiangolo.com/) — API REST async
 - [LangChain](https://python.langchain.com/) — orquestación RAG
-- [Anthropic Claude](https://anthropic.com/) — LLM (claude-haiku-4-5)
+- [Groq](https://groq.com/) — LLM (llama-3.1-8b-instant)
 - [ChromaDB](https://www.trychroma.com/) — vector store local
 - [Pinecone](https://www.pinecone.io/) — vector store cloud (opcional)
 - [HuggingFace Embeddings](https://huggingface.co/) — `all-MiniLM-L6-v2`
@@ -228,7 +228,7 @@ smartchat/
 │   │   ├── core/                  # Config / settings
 │   │   ├── models/                # Schemas Pydantic
 │   │   └── services/              # Lógica de negocio
-│   │       ├── chat_engine.py     # RAG + Claude
+│   │       ├── chat_engine.py     # RAG + Grok
 │   │       ├── vector_store.py    # ChromaDB / Pinecone
 │   │       ├── ingestion.py       # Carga de documentos
 │   │       ├── memory.py          # Historial de sesión
@@ -250,4 +250,4 @@ MIT — libre para uso comercial y personal.
 
 ---
 
-*Desarrollado como demostración de integración de chatbots IA en entornos empresariales. Stack: FastAPI · LangChain · Claude · ChromaDB · Docker.*
+*Desarrollado como demostración de integración de chatbots IA en entornos empresariales. Stack: FastAPI · LangChain · Grok · ChromaDB · Docker.*
