@@ -98,6 +98,57 @@ async def get_document_count(company_id: str = "default"):
     return {"company_id": company_id, "chunks": store.count()}
 
 
+@router.post("/load-default", response_model=IngestResponse)
+async def load_default_document(company_id: str = Form(default="default")):
+    """Indexa el documento de ejemplo predeterminado (segurmax_manual.md)."""
+    default_doc = Path("./data/documents/segurmax_manual.md")
+    if not default_doc.exists():
+        raise HTTPException(status_code=404, detail="Documento predeterminado no encontrado.")
+    try:
+        chunks, processed = await ingest_files([default_doc], company_id=company_id)
+        return IngestResponse(
+            status="ok",
+            chunks_indexed=chunks,
+            files_processed=processed,
+            company_id=company_id,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/default-content")
+async def get_default_content():
+    """Devuelve el contenido del documento predeterminado para vista previa."""
+    default_doc = Path("./data/documents/segurmax_manual.md")
+    if not default_doc.exists():
+        raise HTTPException(status_code=404, detail="Documento no encontrado.")
+    content = default_doc.read_text(encoding="utf-8")
+    return {"filename": default_doc.name, "content": content}
+
+
+@router.get("/default-doc")
+async def get_default_document():
+    """Devuelve el contenido del documento de ejemplo (SegurMax)."""
+    doc_path = Path("./data/documents/segurmax_manual.md")
+    if not doc_path.exists():
+        raise HTTPException(status_code=404, detail="Documento por defecto no encontrado.")
+    return {"filename": doc_path.name, "content": doc_path.read_text(encoding="utf-8")}
+
+
+@router.post("/load-default", response_model=IngestResponse)
+async def load_default_document(company_id: str = Form(default="default")):
+    """Indexa el documento de ejemplo directamente desde el servidor."""
+    doc_path = Path("./data/documents/segurmax_manual.md")
+    if not doc_path.exists():
+        raise HTTPException(status_code=404, detail="Documento por defecto no encontrado.")
+    try:
+        chunks, processed = await ingest_files([doc_path], company_id=company_id)
+        return IngestResponse(status="ok", chunks_indexed=chunks,
+                              files_processed=processed, company_id=company_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.delete("/{company_id}", response_model=DeleteDocumentsResponse)
 async def delete_documents(company_id: str):
     """Elimina todos los documentos indexados de una empresa."""
