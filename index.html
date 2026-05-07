@@ -669,6 +669,201 @@
 
     .toast.show { opacity: 1; transform: translateY(0); }
 
+    /* ── Default doc card ────────────────────────── */
+    .default-doc-card {
+      background: var(--accent-soft);
+      border: 1.5px solid rgba(91,76,245,0.2);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .default-doc-header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .default-doc-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .default-doc-icon { font-size: 20px; flex-shrink: 0; }
+
+    .default-doc-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .default-doc-sub {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .default-doc-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .preview-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .preview-btn:hover { border-color: var(--accent); }
+
+    .load-default-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-xs);
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .load-default-btn:hover { background: var(--accent-h); }
+    .load-default-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .load-default-btn.loaded {
+      background: var(--green);
+      cursor: default;
+    }
+
+    .default-doc-status {
+      font-size: 11px;
+      margin-top: 6px;
+      color: var(--green);
+      min-height: 0;
+    }
+
+    /* ── Preview panel ────────────────────────────── */
+    .preview-panel {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      overflow: hidden;
+      max-height: 320px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .preview-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+
+    .preview-close:hover { background: var(--border); color: var(--text); }
+
+    .preview-content {
+      overflow-y: auto;
+      padding: 12px;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .preview-content::-webkit-scrollbar { width: 3px; }
+    .preview-content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    .preview-loading { text-align: center; color: var(--muted2); padding: 20px; }
+
+    /* Markdown rendered in preview */
+    .preview-content h1, .preview-content h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 10px 0 4px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3px;
+    }
+
+    .preview-content h3 {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 8px 0 3px;
+    }
+
+    .preview-content p { margin: 4px 0; }
+
+    .preview-content strong { color: var(--text); font-weight: 600; }
+
+    .preview-content ul, .preview-content ol {
+      margin: 4px 0 4px 14px;
+    }
+
+    .preview-content li { margin: 2px 0; }
+
+    .preview-content hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 8px 0;
+    }
+
+    .preview-content code {
+      background: var(--border);
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-size: 10.5px;
+      font-family: monospace;
+    }
+
+    /* ── Doc separator ────────────────────────────── */
+    .doc-separator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+      font-size: 10.5px;
+      color: var(--muted2);
+    }
+
+    .doc-separator::before,
+    .doc-separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar { display: none; }
@@ -685,7 +880,7 @@
         <div class="logo-icon">💬</div>
         <span class="logo-text">SmartChat</span>
       </div>
-      <div class="logo-sub">RAG · LangChain · Groq</div>
+      <div class="logo-sub">RAG · LangChain · Claude</div>
     </div>
 
     <!-- Config -->
@@ -713,6 +908,42 @@
     <!-- Documents -->
     <div class="sidebar-section">
       <div class="sidebar-section-title">Documentos de la empresa</div>
+
+      <!-- Default doc -->
+      <div class="default-doc-card" id="default-doc-card">
+        <div class="default-doc-header">
+          <div class="default-doc-info">
+            <span class="default-doc-icon">📋</span>
+            <div>
+              <div class="default-doc-name">segurmax_manual.md</div>
+              <div class="default-doc-sub">Documento de ejemplo — SegurMax S.L.</div>
+            </div>
+          </div>
+          <div class="default-doc-actions">
+            <button class="preview-btn" onclick="togglePreview()" title="Ver contenido">👁</button>
+            <button class="load-default-btn" id="load-default-btn" onclick="loadDefaultDoc()">
+              Usar este
+            </button>
+          </div>
+        </div>
+        <div class="default-doc-status" id="default-doc-status"></div>
+      </div>
+
+      <!-- Preview modal -->
+      <div class="preview-panel" id="preview-panel" style="display:none">
+        <div class="preview-header">
+          <span>📋 segurmax_manual.md</span>
+          <button onclick="togglePreview()" class="preview-close">✕</button>
+        </div>
+        <div class="preview-content" id="preview-content">
+          <div class="preview-loading">Cargando vista previa…</div>
+        </div>
+      </div>
+
+      <div class="doc-separator">
+        <span>o sube tus propios documentos</span>
+      </div>
+
       <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
         <div class="upload-icon">📄</div>
         <div class="upload-text">
@@ -786,7 +1017,7 @@
           </button>
         </div>
       </div>
-      <div class="input-hint">Responde usando los documentos indexados · Powered by Groq + LangChain</div>
+      <div class="input-hint">Responde usando los documentos indexados · Powered by Claude + LangChain</div>
     </div>
   </main>
 </div>
@@ -796,7 +1027,7 @@
 
 <script>
 // ── Config ─────────────────────────────────────────────────────────────────
-const API_BASE = 'https://chatbot-production-ba3d.up.railway.app';
+const API_BASE = 'http://localhost:8000';
 let SESSION_ID = 'session_' + Math.random().toString(36).slice(2, 10);
 let currentCompanyId = 'default';
 let isLoading = false;
@@ -957,8 +1188,8 @@ function addBotMessage(text, meta = {}) {
   // Confidence badge
   let confBadge = '';
   if (confidence < 1 && !fallback) {
-    const cls = confidence > 0.3 ? 'high' : confidence > 0.15 ? 'mid' : 'low';
-    const label = confidence > 0.3 ? '● Alta confianza' : confidence > 0.15 ? '● Media' : '● Baja';
+    const cls = confidence > 0.7 ? 'high' : confidence > 0.45 ? 'mid' : 'low';
+    const label = confidence > 0.7 ? '● Alta confianza' : confidence > 0.45 ? '● Media' : '● Baja';
     confBadge = `<span class="confidence-badge ${cls}">${label}</span>`;
   }
 
@@ -1160,11 +1391,96 @@ function timeNow() {
   return new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
 
-function showToast(msg, duration = 3000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
+// ── Default document ───────────────────────────────────────────────────────
+let previewLoaded = false;
+let defaultDocLoaded = false;
+
+async function loadDefaultDoc() {
+  if (defaultDocLoaded) return;
+  const btn = document.getElementById('load-default-btn');
+  const status = document.getElementById('default-doc-status');
+
+  btn.disabled = true;
+  btn.textContent = 'Cargando…';
+  status.textContent = '';
+
+  try {
+    const formData = new FormData();
+    formData.append('company_id', currentCompanyId);
+
+    const res = await fetch(`${API_BASE}/api/v1/documents/load-default`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error((await res.json()).detail);
+    const data = await res.json();
+
+    btn.textContent = '✓ Cargado';
+    btn.classList.add('loaded');
+    defaultDocLoaded = true;
+    status.textContent = `✓ ${data.chunks_indexed} chunks indexados`;
+
+    docCount += 1;
+    totalChunks += data.chunks_indexed;
+    document.getElementById('stat-docs').textContent = docCount;
+    document.getElementById('stat-chunks').textContent = totalChunks;
+
+    const docList = document.getElementById('doc-list');
+    const item = document.createElement('div');
+    item.className = 'doc-item';
+    item.innerHTML = `<span class="doc-icon">📋</span><span class="doc-name">segurmax_manual.md</span><span class="doc-status"></span>`;
+    docList.appendChild(item);
+
+    showToast('✓ Documento de ejemplo cargado');
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Usar este';
+    status.style.color = 'var(--red)';
+    status.textContent = '✗ Error al cargar';
+    showToast('❌ Error: ' + e.message);
+  }
+}
+
+async function togglePreview() {
+  const panel = document.getElementById('preview-panel');
+  const isVisible = panel.style.display !== 'none';
+
+  if (isVisible) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  panel.style.display = 'flex';
+
+  if (!previewLoaded) {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/documents/default-doc`);
+      if (!res.ok) throw new Error('No disponible');
+      const data = await res.json();
+      document.getElementById('preview-content').innerHTML = renderMarkdownPreview(data.content);
+      previewLoaded = true;
+    } catch (e) {
+      document.getElementById('preview-content').innerHTML =
+        `<div class="preview-loading">No se pudo cargar la vista previa.<br>Asegúrate de que el backend está corriendo.</div>`;
+    }
+  }
+}
+
+function renderMarkdownPreview(md) {
+  return md
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^---+$/gm, '<hr>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[^<]*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
 }
 </script>
 </body>
