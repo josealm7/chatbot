@@ -1018,6 +1018,9 @@
       </div>
       <input type="file" id="file-input" multiple accept=".pdf,.txt,.md" onchange="handleFiles(this.files)" />
       <div class="doc-list" id="doc-list"></div>
+      <button onclick="clearDocuments()" style="width:100%;background:none;border:1px solid var(--border);border-radius:var(--radius-xs);padding:7px;font-size:12px;color:var(--muted);cursor:pointer;margin-top:8px;font-family:'Inter',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+  🗑 Limpiar documentos
+    </button>
 
       <div class="stats-row" style="margin-top:12px;">
         <div class="stat-card">
@@ -1569,6 +1572,27 @@ async function loadDefaultDoc() {
     btn.textContent = 'Usar este';
     status.style.color = 'var(--red)';
     status.textContent = '✗ ' + e.message;
+    if (typeof showToast === 'function') showToast('❌ Error: ' + e.message);
+  }
+}
+
+async function clearDocuments() {
+  if (!confirm('¿Seguro que quieres eliminar todos los documentos indexados?')) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/v1/documents/${currentCompanyId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Error al limpiar');
+    docCount = 0;
+    totalChunks = 0;
+    defaultDocLoaded = false;
+    document.getElementById('stat-docs').textContent = '0';
+    document.getElementById('stat-chunks').textContent = '0';
+    document.getElementById('doc-list').innerHTML = '';
+    document.getElementById('load-default-btn').textContent = 'Usar este';
+    document.getElementById('load-default-btn').classList.remove('loaded');
+    document.getElementById('load-default-btn').disabled = false;
+    document.getElementById('default-doc-status').textContent = '';
+    if (typeof showToast === 'function') showToast('✓ Documentos eliminados');
+  } catch (e) {
     if (typeof showToast === 'function') showToast('❌ Error: ' + e.message);
   }
 }
