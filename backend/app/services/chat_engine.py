@@ -113,7 +113,9 @@ async def chat(
         if score >= settings.similarity_threshold
     ]
 
-    has_context = bool(relevant_results)
+    is_conversational = len(user_message.strip().split()) <= 3
+
+    has_context = bool(relevant_results) or is_conversational
     avg_confidence = (
         sum(s for _, s in relevant_results) / len(relevant_results)
         if relevant_results else 0.0
@@ -157,9 +159,9 @@ async def chat(
 
         # Si el modelo devuelve la señal de no-contexto, usar fallback
         if NO_CONTEXT_RESPONSE in answer or (not has_context):
-            final_answer = config.fallback_message if not has_context else answer
-            fallback = not has_context
-            fallback_reason = "no_context" if not has_context else None
+            final_answer = config.fallback_message if (not has_context and not is_conversational) else answer
+            fallback = not has_context and not is_conversational
+            fallback_reason = "no_context" if (not has_context and not is_conversational) else None
         else:
             final_answer = answer
             fallback = False
