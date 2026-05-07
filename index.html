@@ -60,8 +60,8 @@
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-    }
+      overflow-y: auto;
+}
 
     .sidebar-header {
       padding: 20px 20px 16px;
@@ -1228,13 +1228,13 @@ async function handleFiles(files) {
     totalChunks += data.chunks_indexed;
     document.getElementById('stat-docs').textContent = docCount;
     document.getElementById('stat-chunks').textContent = totalChunks;
-    showToast(`✓ ${data.chunks_indexed} chunks indexados de ${data.files_processed.length} archivo(s)`);
+    if (typeof showToast === 'function') showToast(`✓ ${data.chunks_indexed} chunks indexados de ${data.files_processed.length} archivo(s)`);
   } catch (e) {
     docList.querySelectorAll('.doc-status.loading').forEach(d => {
       d.classList.remove('loading');
       d.style.background = '#dc2626';
     });
-    showToast('❌ Error al subir: ' + e.message);
+    if (typeof showToast === 'function') showToast('❌ Error al subir: ' + e.message);
   }
 }
 
@@ -1275,8 +1275,8 @@ function addBotMessage(text, meta = {}) {
   // Confidence badge
   let confBadge = '';
   if (confidence < 1 && !fallback) {
-    const cls = confidence > 0.7 ? 'high' : confidence > 0.45 ? 'mid' : 'low';
-    const label = confidence > 0.7 ? '● Alta confianza' : confidence > 0.45 ? '● Media' : '● Baja';
+    const cls = confidence > 0.3 ? 'high' : confidence > 0.15 ? 'mid' : 'low';
+    const label = confidence > 0.3 ? '● Alta confianza' : confidence > 0.15 ? '● Media' : '● Baja';
     confBadge = `<span class="confidence-badge ${cls}">${label}</span>`;
   }
 
