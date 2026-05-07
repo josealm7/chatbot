@@ -1563,13 +1563,13 @@ async function loadDefaultDoc() {
     item.innerHTML = `<span class="doc-icon">📋</span><span class="doc-name">segurmax_manual.md</span><span class="doc-status"></span>`;
     docList.appendChild(item);
 
-    showToast('✓ Documento de ejemplo cargado y listo');
+    if (typeof showToast === 'function') showToast('✓ Documento de ejemplo cargado y listo');
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Usar este';
     status.style.color = 'var(--red)';
     status.textContent = '✗ ' + e.message;
-    showToast('❌ Error: ' + e.message);
+    if (typeof showToast === 'function') showToast('❌ Error: ' + e.message);
   }
 }
 
