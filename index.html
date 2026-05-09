@@ -967,14 +967,6 @@
         <input type="text" id="cfg-bot-name" value="Asistente Virtual" />
       </div>
       <div class="field">
-        <label>Empresa</label>
-        <input type="text" id="cfg-company" value="Mi Empresa S.L." />
-      </div>
-      <div class="field">
-        <label>ID empresa</label>
-        <input type="text" id="cfg-company-id" value="default" placeholder="default" />
-      </div>
-      <div class="field">
         <label>Rol del sistema</label>
         <textarea id="cfg-role" rows="3">Eres un asistente de soporte de {company_name}. Responde de forma clara y profesional en español.</textarea>
       </div>
@@ -1159,36 +1151,31 @@ async function checkBackend() {
 
 // ── Config ─────────────────────────────────────────────────────────────────
 async function applyConfig() {
-  const botName   = document.getElementById('cfg-bot-name').value.trim() || 'Asistente Virtual';
-  const company   = document.getElementById('cfg-company').value.trim() || 'Mi Empresa S.L.';
-  const companyId = document.getElementById('cfg-company-id').value.trim() || 'default';
-  const role      = document.getElementById('cfg-role').value.trim();
+  const botName = document.getElementById('cfg-bot-name').value.trim() || 'Asistente Virtual';
+  const role = document.getElementById('cfg-role').value.trim();
 
-  currentCompanyId = companyId;
-
-  // Update topbar
   document.getElementById('topbar-name').textContent = botName;
-  document.getElementById('topbar-company').textContent = company;
+  document.getElementById('topbar-company').textContent = '';
+  document.querySelector('.bot-status').innerHTML = `<span class="status-dot"></span> En línea`;
 
-  // Persist config to backend
   try {
     await fetch(`${API_BASE}/api/v1/config`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        company_id: companyId,
-        company_name: company,
+        company_id: 'default',
+        company_name: '',
         bot_name: botName,
         system_role: role,
       }),
     });
-    showToast('✓ Configuración aplicada');
+    if (typeof showToast === 'function') showToast('✓ Configuración aplicada');
   } catch {
-    showToast('⚠ No se pudo guardar en el backend');
+    if (typeof showToast === 'function') showToast('⚠ No se pudo guardar en el backend');
   }
 
   clearChat(false);
-  addBotMessage(`¡Hola! Soy ${botName}, el asistente de **${company}**. ¿En qué puedo ayudarte?`);
+  addBotMessage(`¡Hola! Soy **${botName}**. ¿En qué puedo ayudarte?`);
 }
 
 // ── File upload ────────────────────────────────────────────────────────────
