@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Literal
 from datetime import datetime
+import re
 
 
 # ── Chat ──────────────────────────────────────────────────────────────────────
@@ -12,9 +13,25 @@ class ChatMessage(BaseModel):
 
 
 class ChatRequest(BaseModel):
-    session_id: str = Field(..., description="ID único de sesión del usuario")
+    session_id: str = Field(..., min_length=1, max_length=64,
+                            description="ID único de sesión del usuario")
     message: str = Field(..., min_length=1, max_length=2000)
-    company_id: str = Field(default="default", description="ID de la empresa/bot configurado")
+    company_id: str = Field(default="default", max_length=64)
+
+    @field_validator("session_id")
+    @classmethod
+    def validate_session_id(cls, v: str) -> str:
+        # Solo alfanuméricos, guiones y guiones bajos — sin inyecciones
+        if not re.match(r"^[a-zA-Z0-9_\-]+$", v):
+            raise ValueError("session_id solo puede contener letras, números, _ y -")
+        return v
+
+    @field_validator("company_id")
+    @classmethod
+    def validate_company_id(cls, v: str) -> str:
+        if not re.match(r"^[a-zA-Z0-9_\-]+$", v):
+            raise ValueError("company_id solo puede contener letras, números, _ y -")
+        return v
 
 
 class Source(BaseModel):

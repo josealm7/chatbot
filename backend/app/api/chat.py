@@ -1,17 +1,21 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from app.models.schemas import ChatRequest, ChatResponse
 from app.services.chat_engine import chat
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 import logging
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/chat", tags=["Chat"])
+limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("", response_model=ChatResponse)
-async def chat_endpoint(req: ChatRequest):
+@limiter.limit("20/minute")
+async def chat_endpoint(request: Request, req: ChatRequest):
     """
     Endpoint principal de chat.
-    Recibe mensaje + session_id, devuelve respuesta con fuentes.
+    Límite: 20 mensajes por minuto por IP.
     """
     try:
         response = await chat(
@@ -22,7 +26,8 @@ async def chat_endpoint(req: ChatRequest):
         return response
     except Exception as e:
         logger.error(f"Chat error: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500,
+                            detail="Error al procesar el mensaje. Inténtalo de nuevo.")
 
 
 @router.delete("/session/{session_id}")
